@@ -4,12 +4,8 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
-
-### More Information
-
-A place to include any other types of information that you'd like to include about yourself.
+I'm mostly interested in tech, start-ups and music.
 
 ### Contact me
 
-[email@domain.com](mailto:email@domain.com)
+[thomas.haratyk@gmail.com](mailto:thomas.haratyk@gmail.com)
