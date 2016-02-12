@@ -3,14 +3,13 @@ layout: post
 title: Hacking Tinder
 ---
 
-![Geek stick pic]({{ site.baseurl }}/images/tinder_hack/geek_stick.png){: .center-image }
+![Geek stick pic]({{ site.baseurl }}/images/tinder_hack/geek_stick.png){: .f-r }
 
 In this post I will demonstrate how to programmatically query your [Tinder](https://www.gotinder.com/, "Tinder's website") matches and send a batch of messages to them. 
 
 You might find this creepy, but to the point where we are now, I find that swiping tens *(hundreds ?)* of people a minute based on their appearance is a bit scary already. It's a funny world we live in.
 
-Believe me or not, I wasn't looking for hookups. I've sent a batch of messages, and met one girl. I also told her that the initial message was automatic and she didn't care. Then I told her that I programmed a bot that was running on the NASA servers, that it could learn and have emotions but she still didn't give a damn :expressionless:
-Anyway, she is the only person I have ever met from an online dating app. That would be a good story but I can't tell you yet if I met the love of my life by writing a ruby script because we've only been together for 2 weeks.
+Believe me or not, I wasn't looking for hookups. I've sent a batch of messages, and met one girl. I also told her that the initial message was automatic and she didn't care. Anyway, she is the only person I have ever met from an online dating app. That would be a good story but I can't tell you yet if I met the love of my life by writing a ruby script because we've only been together for 2 weeks.
 
 **Whatever your intent is, you should be respectful and honest. This little hack is just a way to save your time and meet great people.** :v:
 
@@ -46,8 +45,8 @@ Your phone needs to be connected to the same network as your computer, because y
 
 In terms of software, I have used :
 
-- [mitmproxy](http://mitmproxy.org/)
-- ruby and the [http gem](https://rubygems.org/gems/http)
+- [Mitmproxy](http://mitmproxy.org/)
+- [Ruby](https://www.ruby-lang.org/en/) and the [http gem](https://rubygems.org/gems/http)
 
 ### Setup
 
@@ -92,7 +91,7 @@ Once the certificate is installed, try launching your web browser on your phone 
 
 ### Hack
 
-Open the Tinder app, and log in. Now your mitmproxy console might go crazy because the app is about to redownload everything that it needs, including the pictures. We want to find our list of matches. Tinder poll their API every second to get the updated content, this is done via a POST request to `https://api.gotinder.com/updates`. We can filter the mitmproxy view by pressing <kbd>l</kbd> and then entering a regular expression, [here is a reference of the expressions you can use](http://docs.mitmproxy.org/en/stable/features/filters.html "filter expression reference"). Here I want to filter by url so I use `~u` followed by the regexp.
+Open the Tinder app, and log in. Now your mitmproxy console might go crazy because the app is about to redownload everything that it needs, including the pictures. We want to find our list of matches. Tinder poll their API every second to get the updated content, this is done via a POST request to `https://api.gotinder.com/updates`. We can filter the mitmproxy view by pressing <kbd>L</kbd> and then entering a regular expression, [here is a reference of the expressions you can use](http://docs.mitmproxy.org/en/stable/features/filters.html "filter expression reference"). Here I want to filter by url so I use `~u` followed by the regexp.
 
 {% highlight bash %}
 ~u /.*(tinder).*(update).*/
@@ -106,9 +105,9 @@ Now try to spot the biggest request (or the one that took the longest to load), 
 
 ![mitm_request_header]({{ site.baseurl }}/images/tinder_hack/mitm_request_header.png)
 
-Copy and save the authorization token (the part that I have blanked out from the picture). We will send our requests using almost the same header, don't bother copying it now.
+Copy and save the authorization token (the part that I have blanked out from the picture). We will send our requests using almost the same header (but don't bother copying it just yet).
 
-Then hit <kbd>tab</kbd> to go in the response, then <kbd>b</kbd> to save the output to a file in the current directory. You will be prompted for a file name, you can save it to `matches.json` for example.
+Then hit <kbd>TAB</kbd> to go in the response, then <kbd>B</kbd> to save the output to a file in the current directory. You will be prompted for a file name, you can save it to `matches.json` for example.
 
 Have a quick glance at the file, it should contain all your matches and the full history of your messages and activity.
 
@@ -149,7 +148,7 @@ def new_matches
 end
 
 new_matches.each_with_index do |m, n|
-  puts "sending a message ##{n} to #{m['person']['name']} id (#{m['person']['_id']})"
+  puts "sending message ##{n} to #{m['person']['name']} id (#{m['person']['_id']})"
   res = HTTP.headers(HEADERS)
         .post("https://api.gotinder.com/user/matches/#{m['_id']}",
               json: { message: "Hello #{m['person']['name']}. If I had a flower for every time I thought of you... I could walk through my garden forever." })
@@ -160,7 +159,7 @@ new_matches.each_with_index do |m, n|
 end
 {% endhighlight %}
 
-This is quite straightforward ruby code. I use the `http` gem because I don't like working with the native [Net::HTTP library](http://ruby-doc.org/stdlib-2.3.0/libdoc/net/http/rdoc/Net/HTTP.html "Ruby Net::HTTP reference"). I let the thread sleep for 2 seconds between each request just in case they have some kind of request throttling.
+This is quite straightforward ruby code. I use the `http` gem because I don't like working with the native [Net::HTTP library](http://ruby-doc.org/stdlib-2.3.0/libdoc/net/http/rdoc/Net/HTTP.html "Ruby Net::HTTP reference"). I let the thread sleep for 2 seconds between each request just in case they have some kind of request rate/throttling protection.
 
 Save this code to a file, ie. `tinder.rb`. Don't forget to set your token at the top of the script and to customize your message.
 
@@ -174,7 +173,10 @@ Voilà !
 
 ## Conclusion
 
-This is a simple demonstration on how we can leverage [reverse engineering](https://www.google.co.uk/url?sa=t&rct=j&q=&esrc=s&source=web&cd=6&cad=rja&uact=8&ved=0ahUKEwj0-JWO9uvKAhWpYJoKHevhDxYQFgg7MAU&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FReverse_engineering&usg=AFQjCNF1BBBxkF3p6ydPRMZm3nX5EOzzXA&sig2=IG5r_FYNI2N9XqPsdJA40Q "reverse engineering on Wikipedia") to unlock features that are not accessible through a mobile app. The data we get from the API calls also give us more information than the app, for example we can see the last ping date of the match or its birthday date... That could unlock more potential for further hacking but try not to be too creepy :smile:
+This is a simple demonstration on how we can leverage [reverse engineering](https://www.google.co.uk/url?sa=t&rct=j&q=&esrc=s&source=web&cd=6&cad=rja&uact=8&ved=0ahUKEwj0-JWO9uvKAhWpYJoKHevhDxYQFgg7MAU&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FReverse_engineering&usg=AFQjCNF1BBBxkF3p6ydPRMZm3nX5EOzzXA&sig2=IG5r_FYNI2N9XqPsdJA40Q "reverse engineering on Wikipedia") to unlock features that are not accessible through a mobile app. The data we get from the API calls also give us more information than the app, for example we can see the last ping date of the match or its birthday date... That could unlock more potential for further hacking, but use it wisely :smile:
 
 ### Further reading 
+
+**TODO**
+
 https://blog.heckel.xyz/2013/07/01/how-to-use-mitmproxy-to-read-and-modify-https-traffic-of-your-phone/
