@@ -5,6 +5,7 @@ title: Hacking Tinder
 
 ![Geek stick pic]({{ site.baseurl }}/images/tinder_hack/geek_stick.png){: .f-r }
 
+
 In this post I will demonstrate how to programmatically query your [Tinder](https://www.gotinder.com/, "Tinder's website") matches and send a batch of messages to them. 
 
 You might find this creepy, but to the point where we are now, I find that swiping tens *(hundreds ?)* of people a minute based on their appearance is a bit scary already. It's a funny world we live in.
@@ -26,11 +27,11 @@ It is a bit tricky to get responses on Tinder, my matches were simply ignoring m
 - Tinder servers were down
 - They noticed that I skip both torso and leg days
 
-So I felt like wasting my time, trying to be nice to a girl and just simply being ignored.
+So I felt like wasting my time, trying to be nice to a girl and just simply being ignored. Complete radio silence can be painful, to quote *Elie Wiesel* :
 
 > The opposite of love is not hate, it's indifference. The opposite of art is not ugliness, it's indifference. The opposite of faith is not heresy, it's indifference. And the opposite of life is not death, it's indifference.
->
-> Elie Wiesel
+
+Though sometimes they would just take their time because [this is the way it works now](http://nautil.us/issue/33/attraction/shell-text-me-shell-text-me-not).
 
 ## How ?
 
@@ -46,7 +47,7 @@ Your phone needs to be connected to the same network as your computer, because y
 In terms of software, I have used :
 
 - [Mitmproxy](http://mitmproxy.org/)
-- [Ruby](https://www.ruby-lang.org/en/) and the [http gem](https://rubygems.org/gems/http)
+- [Ruby](https://www.ruby-lang.org/en/) (and the [http gem](https://rubygems.org/gems/http))
 
 ### Setup
 
@@ -97,7 +98,7 @@ Open the Tinder app, and log in. Now your mitmproxy console might go crazy becau
 ~u /.*(tinder).*(update).*/
 {% endhighlight %}
 
-Here what it looks like on my computer :
+Here is what it looks like on my computer :
 
 ![mitm_tinder_update]({{ site.baseurl }}/images/tinder_hack/mitm_tinder_update.png)
 
@@ -139,6 +140,7 @@ HEADERS = { 'host' => 'api.gotinder.com',
             'X-Auth-Token' => TOKEN,
             'os_version' => '90000200001' }
 
+# Here you should specify the path of your matches.json file
 def matches
   JSON.parse(File.read('matches.json'))['matches']
 end
@@ -159,7 +161,7 @@ new_matches.each_with_index do |m, n|
 end
 {% endhighlight %}
 
-This is quite straightforward ruby code. I use the `http` gem because I don't like working with the native [Net::HTTP library](http://ruby-doc.org/stdlib-2.3.0/libdoc/net/http/rdoc/Net/HTTP.html "Ruby Net::HTTP reference"). I let the thread sleep for 2 seconds between each request just in case they have some kind of request rate/throttling protection.
+This is quite straightforward ruby code. I use the `http` gem because I never remember how to use the native [Net::HTTP library](http://ruby-doc.org/stdlib-2.3.0/libdoc/net/http/rdoc/Net/HTTP.html "Ruby Net::HTTP reference"). I let the thread sleep for 2 seconds between each request just in case they have some kind of request rate/throttling protection.
 
 Save this code to a file, ie. `tinder.rb`. Don't forget to set your token at the top of the script and to customize your message.
 
@@ -170,13 +172,6 @@ ruby tinder.rb
 
 Voilà !
 
-
 ## Conclusion
 
-This is a simple demonstration on how we can leverage [reverse engineering](https://www.google.co.uk/url?sa=t&rct=j&q=&esrc=s&source=web&cd=6&cad=rja&uact=8&ved=0ahUKEwj0-JWO9uvKAhWpYJoKHevhDxYQFgg7MAU&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FReverse_engineering&usg=AFQjCNF1BBBxkF3p6ydPRMZm3nX5EOzzXA&sig2=IG5r_FYNI2N9XqPsdJA40Q "reverse engineering on Wikipedia") to unlock features that are not accessible through a mobile app. The data we get from the API calls also give us more information than the app, for example we can see the last ping date of the match or its birthday date... That could unlock more potential for further hacking, but use it wisely :smile:
-
-### Further reading 
-
-**TODO**
-
-https://blog.heckel.xyz/2013/07/01/how-to-use-mitmproxy-to-read-and-modify-https-traffic-of-your-phone/
+This is a simple demonstration on how we can leverage [reverse engineering](https://en.wikipedia.org/wiki/Reverse_engineering "reverse engineering on Wikipedia") to unlock features that are not accessible through a mobile app. The data we get from the API calls also give us more information than the app, for example we can see the last ping date of the match or its birthday date... That could unlock more potential for further hacking, but use it wisely :smile:
