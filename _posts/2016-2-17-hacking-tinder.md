@@ -10,17 +10,17 @@ In this post I will demonstrate how to programmatically query your [Tinder](http
 
 You might find this creepy, but to the point where we are now, I find that swiping tens *(hundreds ?)* of people a minute based on their appearance is a bit scary already. It's a funny world we live in.
 
-Believe me or not, I wasn't looking for hookups. I've sent a batch of messages, and met one girl. I also told her that the initial message was automatic and she didn't care. Anyway, she is the only person I have ever met from an online dating app. That would be a good story but I can't tell you yet if I met the love of my life by writing a ruby script because we've only been together for 2 weeks.
+Believe me or not, I wasn't looking for hookups. I've sent a batch of messages and met one girl. I also told her that the initial message was automatic and she didn't care. Anyway, she is the only person I have ever met from an online dating app. That would be a good story but I can't tell you yet if I met the love of my life by writing a ruby script because we've only been together for 2 weeks.
 
 **Whatever your intent is, you should be respectful and honest. This little hack is just a way to save your time and meet great people.** :v:
 
 
-## Why ?
+## Why?
 1. Learning
 2. Laziness
 3. Send messages from my laptop
 
-It is a bit tricky to get responses on Tinder, my matches were simply ignoring my messages because :
+It is a bit tricky to get responses on Tinder, my matches were simply ignoring my messages because:
 
 - They have tons of people talking to them already
 - They found love and don't use the app anymore (but I had no way to know that from the app itself)
@@ -33,16 +33,16 @@ So I felt like wasting my time, trying to be nice to a girl and just simply bein
 
 Though sometimes they would just take their time because [this is the way it works now](http://nautil.us/issue/33/attraction/shell-text-me-shell-text-me-not).
 
-## How ?
+## How?
 
 Tinder doesn't provide an open API, but by intercepting the traffic between our phone and the Tinder API, we can mimic the phone behavior and send out similar HTTP requests from a computer, namely [a Man-in-the-middle attack](https://en.wikipedia.org/wiki/Man-in-the-middle_attack "man-in-the-middle attack"). This will allow us to download our list of matches and send the messages.
 
-There are many different tools that can help us achieve this. In this post I will explain **how I did it**. Here is my setup :
+There are many different tools that can help us achieve this. In this post I will explain **how I did it**. Here is my setup:
 
 - a Macbook
 - an iPhone 6s
 
-Your phone needs to be connected to the same network as your computer, because your phone network traffic will pass through your computer.
+Your phone needs to be connected to the same network as your computer because your phone network traffic will pass through your computer.
 
 In terms of software, I have used :
 
@@ -61,7 +61,7 @@ If you plan to do more ruby, I recommend using `rbenv` that you can install with
 {% highlight bash %}
 brew install ruby
 {% endhighlight %}
-And once you have ruby installed :
+And once you have ruby installed:
 {% highlight bash %}
 gem install http
 {% endhighlight %}
@@ -75,11 +75,11 @@ A blank screen will appear, everything is fine. mitmproxy is now running and lis
 
 #### On your phone
 
-Uninstall the Tinder app and remove its local data. This will force the app to redownload the list of your matches. You will not loose all your matches as they are stored on the Tinder servers. Then reinstall the app but **don't open it yet**. *If you know a better way to do it without reinstalling the app please leave a comment and I will update the post. I haven't dug too much into that to be honest.*
+Uninstall the Tinder app and remove its local data. This will force the app to redownload the list of your matches. You will not lose all your matches as they are stored on the Tinder servers. Then reinstall the app but **don't open it yet**. *If you know a better way to do it without reinstalling the app please leave a comment and I will update the post. I haven't dug too much into that, to be honest.*
 
 This is important that you reinstall the app before setting up the proxy because the AppStore use [certificate pinning](http://media.blackhat.com/bh-us-12/Turbo/Diquet/BH_US_12_Diqut_Osborne_Mobile_Certificate_Pinning_Slides.pdf, "certificate pinning") which make it unaccessible when going through mitmproxy.
 
-Go in your network settings, and set up the http proxy to use our mitmproxy server. It looks like this on my iPhone :
+Go in your network settings, and set up the http proxy to use our mitmproxy server. It looks like this on my iPhone:
 
 ![mitmproxy settings]({{ site.baseurl }}/images/tinder_hack/mitmproxy_settings.png)
 
@@ -92,7 +92,7 @@ Once the certificate is installed, try launching your web browser on your phone 
 
 ### Hack
 
-Open the Tinder app, and log in. Now your mitmproxy console might go crazy because the app is about to redownload everything that it needs, including the pictures. We want to find our list of matches. Tinder poll their API every second to get the updated content, this is done via a POST request to `https://api.gotinder.com/updates`. We can filter the mitmproxy view by pressing <kbd>L</kbd> and then entering a regular expression, [here is a reference of the expressions you can use](http://docs.mitmproxy.org/en/stable/features/filters.html "filter expression reference"). Here I want to filter by url so I use `~u` followed by the regexp.
+Open the Tinder app, and log in. Now your mitmproxy console might go crazy because the app is about to redownload everything that it needs, including the pictures. We want to find our list of matches. Tinder poll their API every second to get the updated content, this is done via a POST request to `https://api.gotinder.com/updates`. We can filter the mitmproxy view by pressing <kbd>L</kbd> and then entering a regular expression, [here is a reference of the expressions you can use](http://docs.mitmproxy.org/en/stable/features/filters.html "filter expression reference"). Here I want to filter by URL so I use `~u` followed by the regexp.
 
 {% highlight bash %}
 ~u /.*(tinder).*(update).*/
@@ -114,7 +114,7 @@ Have a quick glance at the file, it should contain all your matches and the full
 
 Now, using the same technique of intercepting requests, I found that sending a message to a match is done via a POST request to `https://api.gotinder.com/user/matches/:match_id` with the request body being `{ message: 'Hello.' }`
 
-To send a batch of messages to the matches I had no messages with yet, I wrote a short ruby script :
+To send a batch of messages to the matches I had no messages with yet, I wrote a short ruby script:
 
 {% highlight ruby%}
 #!/usr/bin/env ruby
@@ -165,7 +165,7 @@ This is quite straightforward ruby code. I use the `http` gem because I never re
 
 Save this code to a file, ie. `tinder.rb`. Don't forget to set your token at the top of the script and to customize your message.
 
-Execute the ruby script to send out the messages :
+Execute the ruby script to send out the messages:
 {% highlight bash %}
 ruby tinder.rb
 {% endhighlight %}
@@ -174,4 +174,4 @@ Voilà !
 
 ## Conclusion
 
-This is a simple demonstration on how we can leverage [reverse engineering](https://en.wikipedia.org/wiki/Reverse_engineering "reverse engineering on Wikipedia") to unlock features that are not accessible through a mobile app. The data we get from the API calls also give us more information than the app, for example we can see the last ping date of the match or its birthday date... That could unlock more potential for further hacking, but use it wisely :smile:
+This is a simple demonstration on how we can leverage [reverse engineering](https://en.wikipedia.org/wiki/Reverse_engineering "reverse engineering on Wikipedia") to unlock features that are not accessible through a mobile app. The data we get from the API calls also give us more information than the app, for example, we can see the last ping date of the match or its birthday date... That could unlock more potential for further hacking, but use it wisely :smile:
