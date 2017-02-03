@@ -8,4 +8,4 @@ I'm mostly interested in tech, start-ups and music.
 
 ### Contact me
 
-[thomas.haratyk@gmail.com](mailto:thomas.haratyk@gmail.com)
+[me@jazzytomato.com](mailto:me@jazzytomato.com)
