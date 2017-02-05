@@ -6,11 +6,11 @@ title: Hacking Tinder
 ![Geek stick pic]({{ site.baseurl }}/images/tinder_hack/geek_stick.png){: .f-r }
 
 
-In this post I will demonstrate how to programmatically query your [Tinder](https://www.gotinder.com/, "Tinder's website") matches and send a batch of messages to them. 
+Have you ever wanted to query your [Tinder](https://www.gotinder.com/ "Tinder's website") matches and send a batch of messages to them? 
 
-You might find this creepy, but to the point where we are now, I find that swiping tens *(hundreds ?)* of people a minute based on their appearance is a bit scary already. It's a funny world we live in.
+You might find this creepy, but to the point where we are now, I believe that swiping tens *(hundreds?)* of people a minute based on their appearance is already disturbing.
 
-Believe me or not, I wasn't looking for hookups. I've sent a batch of messages and met one girl. I also told her that the initial message was automatic and she didn't care. Anyway, she is the only person I have ever met from an online dating app. That would be a good story but I can't tell you yet if I met the love of my life by writing a ruby script because we've only been together for 2 weeks.
+Believe me or not, I was not looking for hookups. I have sent a batch of messages and met one girl. I also told her that the initial message was automatic and she didn't care. That would be a good story, but I can't say yet if I met the love of my life by writing a ruby script because we've only been together for two weeks.
 
 **Whatever your intent is, you should be respectful and honest. This little hack is just a way to save your time and meet great people.** :v:
 
@@ -20,9 +20,9 @@ Believe me or not, I wasn't looking for hookups. I've sent a batch of messages a
 2. Laziness
 3. Send messages from my laptop
 
-It is a bit tricky to get responses on Tinder, my matches were simply ignoring my messages because:
+It may be a bit tricky to get responses on Tinder; I think my matches were ignoring my messages because:
 
-- They have tons of people talking to them already
+- They have many people talking to them already
 - They found love and don't use the app anymore (but I had no way to know that from the app itself)
 - Tinder servers were down
 - They noticed that I skip both torso and leg days
@@ -35,9 +35,9 @@ Though sometimes they would just take their time because [this is the way it wor
 
 ## How?
 
-Tinder doesn't provide an open API, but by intercepting the traffic between our phone and the Tinder API, we can mimic the phone behavior and send out similar HTTP requests from a computer, namely [a Man-in-the-middle attack](https://en.wikipedia.org/wiki/Man-in-the-middle_attack "man-in-the-middle attack"). This will allow us to download our list of matches and send the messages.
+Tinder doesn't provide an open API, but by intercepting the traffic between our phone and the Tinder API, we can mimic the phone behaviour and send out similar HTTP requests from a computer, namely [a Man-in-the-middle attack](https://en.wikipedia.org/wiki/Man-in-the-middle_attack "man-in-the-middle attack"). Then, we can download the list of matches and send the messages.
 
-There are many different tools that can help us achieve this. In this post I will explain **how I did it**. Here is my setup:
+Many different tools can help us achieve this. In this post, I will explain **how I did it**. Here is my setup:
 
 - a Macbook
 - an iPhone 6s
@@ -57,11 +57,11 @@ I use [Homebrew](http://brew.sh/) as a package manager which allows me to instal
 {% highlight bash %}
 brew install mitmproxy
 {% endhighlight %}
-If you plan to do more ruby, I recommend using `rbenv` that you can install with Homebrew as well. Otherwise, and if you don't already have ruby :
+If you plan to do more Ruby, I recommend using `rbenv` that you can install with Homebrew as well. Otherwise, and if you don't already have Ruby :
 {% highlight bash %}
 brew install ruby
 {% endhighlight %}
-And once you have ruby installed:
+And once you have Ruby installed:
 {% highlight bash %}
 gem install http
 {% endhighlight %}
@@ -75,7 +75,7 @@ A blank screen will appear, everything is fine. mitmproxy is now running and lis
 
 #### On your phone
 
-Uninstall the Tinder app and remove its local data. This will force the app to redownload the list of your matches. You will not lose all your matches as they are stored on the Tinder servers. Then reinstall the app but **don't open it yet**. *If you know a better way to do it without reinstalling the app please leave a comment and I will update the post. I haven't dug too much into that, to be honest.*
+Uninstall the Tinder app and remove its local data. This will force the app to redownload the list of your matches. You will not lose all your matches as they are stored on the Tinder servers. Then reinstall the app but **don't open it yet**. *If you know a better way to do it without reinstalling the app, please leave a comment, and I will update the post. I haven't dug too much into that, to be honest.*
 
 This is important that you reinstall the app before setting up the proxy because the AppStore use [certificate pinning](http://media.blackhat.com/bh-us-12/Turbo/Diquet/BH_US_12_Diqut_Osborne_Mobile_Certificate_Pinning_Slides.pdf, "certificate pinning") which make it unaccessible when going through mitmproxy.
 
@@ -108,9 +108,9 @@ Now try to spot the biggest request (or the one that took the longest to load), 
 
 Copy and save the authorization token (the part that I have blanked out from the picture). We will send our requests using almost the same header (but don't bother copying it just yet).
 
-Then hit <kbd>TAB</kbd> to go in the response, then <kbd>B</kbd> to save the output to a file in the current directory. You will be prompted for a file name, you can save it to `matches.json` for example.
+Then hit <kbd>TAB</kbd> to go in the response, then <kbd>B</kbd> to save the output to a file in the current directory. You will be prompted for a file name; you can save it to `matches.json` for example.
 
-Have a quick glance at the file, it should contain all your matches and the full history of your messages and activity.
+Have a quick glance at the file, and it should contain all your matches and the full history of your messages and activity.
 
 Now, using the same technique of intercepting requests, I found that sending a message to a match is done via a POST request to `https://api.gotinder.com/user/matches/:match_id` with the request body being `{ message: 'Hello.' }`
 
@@ -157,13 +157,13 @@ new_matches.each_with_index do |m, n|
 
   puts res.body
   puts res.status == 200 ? 'OK' : 'FAILED'
-  sleep(2)
+  sleep(1)
 end
 {% endhighlight %}
 
-This is quite straightforward ruby code. I use the `http` gem because I never remember how to use the native [Net::HTTP library](http://ruby-doc.org/stdlib-2.3.0/libdoc/net/http/rdoc/Net/HTTP.html "Ruby Net::HTTP reference"). I let the thread sleep for 2 seconds between each request just in case they have some kind of request rate/throttling protection.
+This is quite straightforward ruby code. I use the `http` gem because I never remember how to use the native [Net::HTTP library](http://ruby-doc.org/stdlib-2.3.0/libdoc/net/http/rdoc/Net/HTTP.html "Ruby Net::HTTP reference"). I let the thread sleep for a second between each request just in case they have some request rate/throttling protection.
 
-Save this code to a file, ie. `tinder.rb`. Don't forget to set your token at the top of the script and to customize your message.
+Save this code to a file, i.e. `tinder.rb`. Don't forget to set your token at the top of the script and to customise your message.
 
 Execute the ruby script to send out the messages:
 {% highlight bash %}
