@@ -2,7 +2,7 @@
 layout: post
 title: Hacker News Lookup. A chrome extension built with ClojureScript
 ---
-![HNLookup screenshot]({{ site.baseurl }}/images/hnhit/hnhit-screenshot.png)
+![HNLookup screenshot]({{ site.baseurl }}/images/hnlookup/hnlookup-screenshot.png)
 
 ## Problem
 
