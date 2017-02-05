@@ -14,7 +14,7 @@ Hacker News Lookup is a minimal and non-intrusive Chrome extension that allows y
 
 It only runs when you click on the extension button and queries the [algolia api](https://hn.algolia.com). It does not track any of your browsing history.
 
-The extension is available on the Chrome store here and the source code here: [https://github.com/jazzytomato/hnlookup](https://github.com/jazzytomato/hnlookup)
+The extension is available on the Chrome store [here](https://chrome.google.com/webstore/detail/hacker-news-lookup/ekfmfhhfalhmiacchemmhapffjaolffo) and the source code here: [https://github.com/jazzytomato/hnlookup](https://github.com/jazzytomato/hnlookup)
 
 
 ## Vision
